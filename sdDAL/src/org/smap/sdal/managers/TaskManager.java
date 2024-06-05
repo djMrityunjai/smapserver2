@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -3713,7 +3714,13 @@ public class TaskManager {
 		if(task.action_link != null) {
 			taskUrl.append(task.action_link);
 		} else {
-			taskUrl.append("/").append(task.survey_ident).append("?assignment_id=").append(task.a_id);
+			// Added taskkey=<task.id> for webformURL
+			if (task.id >0) {
+				taskUrl.append("/").append(task.survey_ident).append("?taskkey=").append(task.id).append("&assignment_id=").append(task.a_id);
+			} else {
+				taskUrl.append("/").append(task.survey_ident).append("?assignment_id=").append(task.a_id);
+			}
+			// taskUrl.append("/").append(task.survey_ident).append("?assignment_id=").append(task.a_id);
 			if(task.update_id != null) {
 				taskUrl.append("&datakey=instanceid&datakeyvalue=").append(task.update_id);
 			}
@@ -3723,6 +3730,14 @@ public class TaskManager {
 			out = out.replaceAll("\\$\\{task_webform\\}", taskUrl.toString());
 			out = out.replaceAll("\\$\\{assignee_name\\}", task.assignee_name);
 			out = out.replaceAll("\\$\\{scheduled\\}", task.from.toString());
+
+			// Email Context extending to data in initial_data
+			if (task.initial_data != null) {
+				for (Map.Entry<String, String> entry : task.initial_data.values.entrySet()) {
+					String placeholder = "\\$\\{" + entry.getKey() + "\\}";
+					out = out.replaceAll(placeholder, entry.getValue());
+				}
+            }
 
 		} else {
 			log.info("Could not fill task template details for: " + out + " : " + ((task == null) ? "task is null" : "task not null" ));
