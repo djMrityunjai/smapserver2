@@ -16,6 +16,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.smap.sdal.Utilities.ApplicationException;
@@ -102,7 +103,9 @@ public class WebhookManager {
 		MultipartEntityBuilder entityBuilder =  MultipartEntityBuilder.create();
 		StringBody sba = new StringBody(payload, ContentType.TEXT_PLAIN);
 		entityBuilder.addPart("data", sba);
-		req.setEntity(entityBuilder.build());
+		// req.setEntity(entityBuilder.build());
+		StringEntity stringEntity = new StringEntity(payload, ContentType.APPLICATION_JSON);
+		req.setEntity(stringEntity);
 		log.info("	Info: Webhook request to: " + req.getURI().toString());
 		HttpResponse response = httpclient.execute(target, req, localContext);
 		int responseCode = response.getStatusLine().getStatusCode();
