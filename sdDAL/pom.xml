@@ -44,6 +44,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>smapserver</groupId>
+			<artifactId>javarosa</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
 			<version>9.0.83</version>
